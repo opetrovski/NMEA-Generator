@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="480px" height="260px" version="1.1" viewBox="30 20 480 260">
+	<rect id="back" x="30" y="20" width="480" height="260" style="fill:#FFFFFF;" />
+	<path id="boat"       style="fill:#CCCCCC; stroke:#000000; stroke-width:2.5; stroke-linejoin:round;" d="m 265,37.75 c -48.47,55.425 -63.86,132.46 -44.16,225 l 88.327,0 c 19.69,-92.54 4.3,-169.58 -44.17,-225 z" />
+	<path id="keelLine"   style="fill:none;    stroke:#000000; stroke-width:1; stroke-dasharray:1, 1;" d="M 265,36.5 265,264" />
+	<path id="centerLine" style="fill:none;    stroke:#000000; stroke-dasharray:1, 1;" d="m 200,169.5 130,0" />
+	<path id="arrowLeft"  style="fill:#000000; stroke:none; fill-rule:evenodd;" d="m 114.92,149.78 c -3.419,4.764 -5.468,10.183 -6.148,15.718 l 63.732,0 0,7.999 -63.764,0 c 0.651,5.572 2.708,10.997 6.18,15.716 l -53.619,-19.72 53.619,-19.72 z" />
+	<path id="arrowright" style="fill:#000000; stroke:none; fill-rule:evenodd;" transform="translate(525,0) scale(-1,1)"  d="m 114.92,149.78 c -3.419,4.764 -5.468,10.183 -6.148,15.718 l 63.732,0 0,7.999 -63.764,0 c 0.651,5.572 2.708,10.997 6.18,15.716 l -53.619,-19.72 53.619,-19.72 z" />
+	<path id="anglebow"   style="fill:none; stroke:#000000; stroke-width:1;" d="m 285,169.5 c 0,-11.046 -8.954,-20 -20,-20" />
+	<circle id="dot" style="fill:#000000; stroke:none;" cx="273" cy="161.5" r="2.5"/>
+	<g style="font-family:sans-serif; font-size:32px; fill:#000000; stroke:none;">
+		<switch allowReorder="yes">
+			<g systemLanguage="en">
+				<text style="text-anchor:end;text-align:end;" y="80"  x="215">port</text>
+				<text style="text-anchor:end;text-align:end;" y="120" x="195">abeam</text>
+				<text y="80"  x="315">starboard</text>
+				<text y="120" x="335">abeam</text>
+			</g>
+			<g systemLanguage="de">
+				<text style="text-anchor:end;text-align:end;" y="80"  x="215">Backbord</text>
+				<text style="text-anchor:end;text-align:end;" y="120" x="195">querab</text>
+				<text y="80"  x="315">Steuerbord</text>
+				<text y="120" x="335">querab</text>
+			</g>
+			<g systemLanguage="fr">
+				<text style="text-anchor:end;text-align:end;" y="120" x="195">bâbord</text>
+				<text y="120" x="335">tribord</text>
+			</g>
+			<g systemLanguage="es">
+				<text style="text-anchor:end;text-align:end;" y="120" x="195">babor</text>
+				<text y="120" x="335">estribor</text>
+			</g>
+			<g systemLanguage="zh">
+				<text style="text-anchor:end;text-align:end;" y="120" x="195">左舷</text>
+				<text y="120" x="335">右舷</text>
+			</g>
+			<g systemLanguage="ar">
+				<text style="text-anchor:end;text-align:end;" y="120" x="195">بلاك بورد</text>
+				<text y="120" x="335">ميمنة</text>
+			</g>
+		</switch>
+	</g>
+</svg>

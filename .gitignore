@@ -1,0 +1,12 @@
+# Ignore Files
+*.bak
+*.class
+*.obj
+*.tmp
+*.log
+*~
+nmeagenerator.iml
+
+# Ignore Directories
+.idea/
+target/
