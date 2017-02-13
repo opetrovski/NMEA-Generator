@@ -7,7 +7,6 @@ import generator.nmea.Yacht;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
@@ -33,18 +32,14 @@ public class Main extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Steering", null, new SteeringPanel(yacht),
                 "Set speed and direction");
-//        tabbedPane.addTab("AIS", null, new AISRadarPanel(),
-//                "Set number and position of other vessels");
-//        tabbedPane.addTab("Auto Pilot", null, new JPanel(), "");
         tabbedPane.addTab("Settings", null, settingsPanel,
                 "Enable Components, define ports and intervalls");
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
         getContentPane().add(tabbedPane);
 
-//        dispatcher.start();
+        dispatcher.start();
         yacht.start();
-//        gps.start();
-//        compass.start();
+        gps.start();
+        compass.start();
     }
 
     public static void main(String[] args) {
