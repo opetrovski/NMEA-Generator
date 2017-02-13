@@ -1,7 +1,7 @@
 package generator.nmea;
 
 
-import generator.compass.CompassDeviation;
+import generator.compass.DeviationTable;
 import generator.compass.DeclinationTable2013;
 
 public class Yacht extends Thread {
@@ -109,7 +109,7 @@ public class Yacht extends Thread {
             heading_magnetic = heading_magnetic - 360;
         }
 
-        compass_deviation = CompassDeviation.getDeviation(heading_magnetic);
+        compass_deviation = DeviationTable.getDeviation(heading_magnetic);
         heading_compass = heading_magnetic - compass_deviation;
         if (heading_compass < 0) {
             heading_compass = heading_compass + 360;

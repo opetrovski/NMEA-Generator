@@ -1,6 +1,6 @@
 package generator.compass;
 
-public class CompassDeviation {
+public class DeviationTable {
 
     static final double[][] deviation_table = {
             {0, -3},
