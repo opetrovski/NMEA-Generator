@@ -28,20 +28,21 @@ public class Main extends JFrame {
         Yacht yacht = new Yacht();
         GPS gps = new GPS(yacht, pos);
         Compass compass = new Compass(yacht, pos);
+        SettingsPanel settingsPanel = new SettingsPanel(compass, gps, yacht, dispatcher);
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Steering", null, new SteeringPanel(),
+        tabbedPane.addTab("Steering", null, new SteeringPanel(yacht),
                 "Set speed and direction");
 //        tabbedPane.addTab("AIS", null, new AISRadarPanel(),
 //                "Set number and position of other vessels");
 //        tabbedPane.addTab("Auto Pilot", null, new JPanel(), "");
-        tabbedPane.addTab("Settings", null, new SettingsPanel(compass, gps, yacht, dispatcher),
+        tabbedPane.addTab("Settings", null, settingsPanel,
                 "Enable Components, define ports and intervalls");
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
         getContentPane().add(tabbedPane);
 
 //        dispatcher.start();
-//        yacht.start();
+        yacht.start();
 //        gps.start();
 //        compass.start();
     }

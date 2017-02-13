@@ -5,10 +5,10 @@ import generator.compass.CompassDeviation;
 import generator.compass.DeclinationTable2013;
 
 public class Yacht extends Thread {
-    int updateInterval = 2; // seconds
+    int updateInterval = 1; // seconds
     double hullSpeed = 0.5;
-    double speed = 10.0;
-    double heading = 90.0;
+    double speed = 0.0;
+    double heading = 0.0;
     double heading_magnetic;
     double heading_true;
     double heading_compass;
@@ -23,6 +23,9 @@ public class Yacht extends Thread {
     public Yacht() {
     }
 
+    public void decRudderPosition(){ rudderposition--; }
+    public void incRudderPosition(){ rudderposition++; }
+    public void setSpeedInKnots(int speed){ this.speed = speed; }
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
@@ -154,7 +157,6 @@ public class Yacht extends Thread {
         // Now convert lat, long back into degrees
         latitude = p2 * 180 / Math.PI;
         longitude = l2 * 180 / Math.PI;
-        //System.out.println("lat:"+latitude+" lon:"+longitude);
     }
 
 }

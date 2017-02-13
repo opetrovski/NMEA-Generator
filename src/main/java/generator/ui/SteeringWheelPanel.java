@@ -1,6 +1,7 @@
 package generator.ui;
 
 
+import generator.nmea.Yacht;
 import org.apache.batik.dom.events.DOMMouseEvent;
 import org.apache.batik.dom.svg.SVGOMPoint;
 import org.apache.batik.parser.AWTTransformProducer;
@@ -23,8 +24,10 @@ import java.io.File;
 public class SteeringWheelPanel extends AbstractPanel {
 
     protected double oldX = 0.0;
+    Yacht yacht;
 
-    public SteeringWheelPanel() {
+    public SteeringWheelPanel(Yacht yacht) {
+        this.yacht = yacht;
         JSVGCanvas c = new JSVGCanvas();
         c.setDocumentState(JSVGComponent.ALWAYS_DYNAMIC);
         String uri = new File("steering-wheel.svg").toURI().toString();
@@ -57,6 +60,10 @@ public class SteeringWheelPanel extends AbstractPanel {
             double degree = 0.5;
             if (oldX > pt.getX()) {
                 degree = -0.5;
+                yacht.decRudderPosition();
+            }
+            else{
+                yacht.incRudderPosition();
             }
 
             rotate(elt, degree);

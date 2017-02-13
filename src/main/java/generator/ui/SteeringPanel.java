@@ -1,5 +1,7 @@
 package generator.ui;
 
+import generator.nmea.Yacht;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -8,10 +10,15 @@ import java.awt.*;
 
 public class SteeringPanel extends AbstractPanel {
 
-    public SteeringPanel() {
+    Yacht yacht;
+    JTextField latitude, longitude, compassCourse, deviation, magneticCourse, declination, trueCourse;
+
+    public SteeringPanel(Yacht yacht) {
+        this.yacht = yacht;
         setLayout(new GridLayout(2, 1, 5, 5));
-        add(new SteeringWheelPanel());
+        add(new SteeringWheelPanel(yacht));
         add(createCompassPanel());
+        updateGUI();
     }
 
     private JPanel createSpeedPanel() {
@@ -26,7 +33,7 @@ public class SteeringPanel extends AbstractPanel {
                 JSlider source = (JSlider) e.getSource();
                 if (!source.getValueIsAdjusting()) {
                     int value = source.getValue();
-                    System.out.println(Integer.toString(value));
+                    yacht.setSpeedInKnots(value);
                 }
             }
         });
@@ -42,46 +49,25 @@ public class SteeringPanel extends AbstractPanel {
 
     }
 
-    private void addSlider(JPanel p, JSlider slider) {
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridheight = 1;
-        c.gridwidth = 3;
-        c.fill = GridBagConstraints.NONE; //BOTH;//NONE HORIZONTAL
-        c.weightx = 0;//1.0;
-        c.weighty = 0;//1.0;
-        c.anchor = GridBagConstraints.WEST;
-        c.insets = new Insets(3, 3, 3, 3);
-        c.gridwidth = 1; //GridBagConstraints.REMAINDER;
-        p.add(slider, c);
-
-        c.anchor = GridBagConstraints.WEST;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        final JTextField tf = new JTextField(3);
-        tf.setText("0");
-        tf.setEnabled(false);
-        p.add(tf, c);
-
-    }
-
     private JPanel createCurrentPositionPanel() {
         JPanel p = new JPanel();
         p.setLayout(new GridBagLayout());
-        addInputField(p, "Latitude", 8, true);
-        addInputField(p, "Longitude", 8, true);
+        latitude = addInputField(p, "Latitude", 8, true);
+        longitude = addInputField(p, "Longitude", 8, true);
         p.setBorder(
                 BorderFactory.createTitledBorder("Current Position"));
         return p;
     }
 
+
     private JPanel createCompassPanel() {
         JPanel p = new JPanel();
         p.setLayout(new GridBagLayout());
-        addInputField(p, "Compass course", 8, true);
-        addInputField(p, "Deviation", 8, true);
-        addInputField(p, "Magnetic course", 8, true);
-        addInputField(p, "Declination", 8, true);
-        addInputField(p, "True course", 8, true);
+        compassCourse = addInputField(p, "Compass course", 8, true);
+        deviation = addInputField(p, "Deviation", 8, true);
+        magneticCourse = addInputField(p, "Magnetic course", 8, true);
+        declination = addInputField(p, "Declination", 8, true);
+        trueCourse = addInputField(p, "True course", 8, true);
         p.setBorder(BorderFactory.createTitledBorder("Course"));
 
         JPanel panel = new JPanel();
@@ -92,4 +78,34 @@ public class SteeringPanel extends AbstractPanel {
         return panel;
     }
 
+    private void updateGUI(){
+        Runnable r = new Runnable(){
+            public void run() {
+                while(true) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                    }
+                    latitude.setText(format(yacht.getLatitude()));
+                    longitude.setText(format(yacht.getLongitude()));
+                    compassCourse.setText(formatCourse(yacht.getHeading_compass()));
+                    deviation.setText(formatCourse(yacht.getCompass_deviation()));
+                    magneticCourse.setText(formatCourse(yacht.getHeading_magnetic()));
+                    declination.setText(formatCourse(yacht.getCompass_declination()));
+                    trueCourse.setText(formatCourse(yacht.getHeading_true()));
+                }
+            }
+
+            private String format(double value){
+                return String.format( "%.2f", value);
+            }
+
+            private String formatCourse(double value){
+                return String.format( "%.0f", value);
+            }
+
+        };
+
+        new Thread(r).start();
+    }
 }
