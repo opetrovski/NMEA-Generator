@@ -8,10 +8,12 @@ public class Session extends Thread {
 
     Socket socket;
     PipedInputStream pis;
+    PipedOutputStream posMonitor;
 
-    public Session(Socket socket, PipedInputStream pis) {
+    public Session(Socket socket, PipedInputStream pis, PipedOutputStream posMonitor) {
         this.socket = socket;
         this.pis = pis;
+        this.posMonitor = posMonitor;
     }
 
     public void run() {
@@ -27,7 +29,8 @@ public class Session extends Thread {
 
                 while (in.ready()) {
                     s = in.readLine();
-                    System.out.println("write to socket: " + s);
+                    String msg = "Sending   " + s + "\n";
+                    posMonitor.write(msg.getBytes());
                     raus.println(s);
                 }
             }

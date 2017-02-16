@@ -12,6 +12,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -33,8 +35,10 @@ public class SettingsPanel extends AbstractPanel {
     GPS gps;
     Yacht yacht;
     NmeaDispatcher dispatcher;
+    JTextArea monitorTextArea;
+    PipedInputStream pisMonitor = new PipedInputStream();
 
-    public SettingsPanel(Compass compass, GPS gps, Yacht yacht, NmeaDispatcher dispatcher) {
+    public SettingsPanel(Compass compass, GPS gps, Yacht yacht, NmeaDispatcher dispatcher) throws Exception{
         this.compass = compass;
         this.gps = gps;
         this.yacht = yacht;
@@ -48,12 +52,16 @@ public class SettingsPanel extends AbstractPanel {
         yacht.setLatitude(Double.parseDouble(prop.getProperty(GPS_LATITUDE)));
         dispatcher.setPort(Integer.parseInt(prop.getProperty(CONNECTION_PORT)));
 
+        PipedOutputStream pos = new PipedOutputStream(pisMonitor);
+        dispatcher.setMonitorPipe(pos);
+
         setLayout(new BorderLayout());
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("GPS", null, createGPSPanel(), null);
         tabbedPane.addTab("Compass", null, createCompassPanel(), null);
         tabbedPane.addTab("Connection", null, createConnectionPanel(), null);
         add(tabbedPane, BorderLayout.CENTER);
+        startMonitoring();
     }
 
     private void loadProperties() {
@@ -281,11 +289,18 @@ public class SettingsPanel extends AbstractPanel {
         p3.setLayout(new GridLayout(2,1));
         p3.add(p);
         JButton resetBtn = addButton(p3, "Reset");
+        resetBtn.addActionListener(new ActionListener(){
+            public void actionPerformed (ActionEvent ae){
+                monitorTextArea.setText("");
+                dispatcher.reset(Integer.parseInt(tf.getText()));
+            }
+        });
 
         JPanel p2 = new JPanel();
         p2.setLayout(new BorderLayout());
         p2.setBorder(new TitledBorder("Monitor"));
-        p2.add(new JTextArea());
+        monitorTextArea = new JTextArea();
+        p2.add(monitorTextArea);
 
         JPanel p1 = new JPanel();
         p1.setLayout(new BorderLayout());
@@ -295,4 +310,31 @@ public class SettingsPanel extends AbstractPanel {
         return p1;
     }
 
+    private void startMonitoring(){
+        Runnable r = new Runnable(){
+            public void run() {
+                try {
+                    BufferedReader in = new BufferedReader(new InputStreamReader(pisMonitor));
+                    String s;
+                    while (true) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                        }
+
+                        while (in.ready()) {
+                            s = in.readLine();
+                            monitorTextArea.append(s);
+                            monitorTextArea.append("\n");
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        new Thread(r).start();
+
+    }
 }
