@@ -19,7 +19,8 @@ public class Main extends JFrame {
         setMinimumSize(new Dimension(600, 450));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        UIManager.setLookAndFeel( "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel" );
+        //UIManager.setLookAndFeel( "com.seaglasslookandfeel.SeaGlassLookAndFeel" );
         PipedInputStream pis = new PipedInputStream();
         PipedOutputStream pos = new PipedOutputStream(pis);
 

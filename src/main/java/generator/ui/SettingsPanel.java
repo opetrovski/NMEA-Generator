@@ -1,9 +1,6 @@
 package generator.ui;
 
-import generator.nmea.Compass;
-import generator.nmea.GPS;
-import generator.nmea.NmeaDispatcher;
-import generator.nmea.Yacht;
+import generator.nmea.*;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -291,8 +288,9 @@ public class SettingsPanel extends AbstractPanel {
         JButton resetBtn = addButton(p3, "Reset");
         resetBtn.addActionListener(new ActionListener(){
             public void actionPerformed (ActionEvent ae){
-                monitorTextArea.setText("");
-                dispatcher.reset(Integer.parseInt(tf.getText()));
+                dispatcher.setPort(Integer.parseInt(tf.getText()));
+                ResetThread thread = new ResetThread(dispatcher.getSocket());
+                thread.start();
             }
         });
 

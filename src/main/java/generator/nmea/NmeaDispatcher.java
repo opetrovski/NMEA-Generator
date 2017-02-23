@@ -21,11 +21,11 @@ public class NmeaDispatcher extends Thread {
 
     public void setPort(int port) {
         this.port = port;
+        portHasChanged = true;
     }
 
-    public void reset(int port){
-        this.port = port;
-        portHasChanged = true;
+    public ServerSocket getSocket() {
+        return server;
     }
 
     public void setMonitorPipe(PipedOutputStream pos){
@@ -33,34 +33,89 @@ public class NmeaDispatcher extends Thread {
     }
 
     public void run() {
-        try {
             while (true) {
-                server = new ServerSocket(port);
-                while (!portHasChanged) {
+
+                if( createSocket() ){
+                    waitForClientConnections();
+                }
+                else{
+                    // wait for reset of port
                     portHasChanged = false;
-                    String msg = "Waiting for client connections on port " + port + "\n";
-                    posMonitor.write(msg.getBytes());
-                    Socket socket = server.accept();
+                    while (!portHasChanged) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                        }
+                    }
+                }
+
+            }
+    }
+
+    private void waitForClientConnections() {
+        try {
+            while (!server.isClosed()) {
+                portHasChanged = false;
+                String msg = "Waiting for client connections on port " + port + "\n";
+                posMonitor.write(msg.getBytes());
+                Socket socket = null;
+                try {
+                    socket = server.accept();
+                }
+                catch(Exception e){
+                    // ignore
+                }
+                if( !server.isClosed() ) {
                     msg = "New client connection accepted from " + socket.getRemoteSocketAddress().toString() + "\n";
                     posMonitor.write(msg.getBytes());
                     Session s = new Session(socket, pis, posMonitor);
                     s.start();
                 }
-                server.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private boolean available() {
+        boolean portTaken = false;
+        ServerSocket socket = null;
+        try {
+            socket = new ServerSocket(port);
+        } catch (IOException e) {
+            portTaken = true;
+        } finally {
+            if (socket != null)
+                try {
+                    socket.close();
+                } catch (IOException e) { /* e.printStackTrace(); */ }
+        }
 
-    private void log(String message) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                //logger.append(message);
+        if( portTaken ) {
+            String msg = "The port " + port + " is in use.\n";
+            try {
+                posMonitor.write(msg.getBytes());
+            } catch (IOException e) {
             }
-        });
+        }
+        return !portTaken;
     }
 
+    private boolean createSocket(){
+    try {
+        String msg = "Bind socket to port " + port + "\n";
+        posMonitor.write(msg.getBytes());
+        server = new ServerSocket(port);
+    } catch (IOException e) {
+        String msg = "Create Socket failed on port " + port + ". "+e.getMessage()+"\n";
+        e.printStackTrace();
+        try {
+            posMonitor.write(msg.getBytes());
+        } catch (IOException e2) {
+        }
+        return false;
+    }
+    return true;
+}
 
 }
