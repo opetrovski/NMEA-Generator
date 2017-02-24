@@ -106,7 +106,7 @@ public class SettingsPanel extends AbstractPanel {
         JPanel p = new JPanel();
         p.setLayout(new GridBagLayout());
         p.setBorder(new TitledBorder("NMEA Sentence Transmission"));
-        JTextField tf = addInputField(p, "Interval [sec]", 2);
+        JTextField tf = addInputField(p, "Transmission Interval [sec]", 2);
         tf.setText(prop.getProperty(GPS_INTERVAL));
         JCheckBox cb = addCheckboxField(p, "GPS is Sending Data");
         cb.setSelected(Boolean.parseBoolean(prop.getProperty(GPS_ENABLED)));
@@ -282,7 +282,7 @@ public class SettingsPanel extends AbstractPanel {
         tf.setText(prop.getProperty(CONNECTION_PORT));
 
         JPanel p3 = new JPanel();
-        p3.setBorder(new TitledBorder("NMEA Sentence Transmission"));
+        p3.setBorder(new TitledBorder("Server Settings"));
         p3.setLayout(new GridLayout(2,1));
         p3.add(p);
         JButton resetBtn = addButton(p3, "Reset");
@@ -296,7 +296,7 @@ public class SettingsPanel extends AbstractPanel {
 
         JPanel p2 = new JPanel();
         p2.setLayout(new BorderLayout());
-        p2.setBorder(new TitledBorder("Monitor"));
+        p2.setBorder(new TitledBorder("Server Monitor"));
         monitorTextArea = new JTextArea();
         p2.add(monitorTextArea);
 

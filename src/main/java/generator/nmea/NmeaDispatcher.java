@@ -77,30 +77,6 @@ public class NmeaDispatcher extends Thread {
         }
     }
 
-    private boolean available() {
-        boolean portTaken = false;
-        ServerSocket socket = null;
-        try {
-            socket = new ServerSocket(port);
-        } catch (IOException e) {
-            portTaken = true;
-        } finally {
-            if (socket != null)
-                try {
-                    socket.close();
-                } catch (IOException e) { /* e.printStackTrace(); */ }
-        }
-
-        if( portTaken ) {
-            String msg = "The port " + port + " is in use.\n";
-            try {
-                posMonitor.write(msg.getBytes());
-            } catch (IOException e) {
-            }
-        }
-        return !portTaken;
-    }
-
     private boolean createSocket(){
     try {
         String msg = "Bind socket to port " + port + "\n";

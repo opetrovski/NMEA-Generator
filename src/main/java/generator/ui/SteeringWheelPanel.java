@@ -20,6 +20,10 @@ import org.w3c.dom.svg.SVGDocument;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Paths;
 
 public class SteeringWheelPanel extends AbstractPanel {
 
@@ -30,21 +34,55 @@ public class SteeringWheelPanel extends AbstractPanel {
         this.yacht = yacht;
         JSVGCanvas c = new JSVGCanvas();
         c.setDocumentState(JSVGComponent.ALWAYS_DYNAMIC);
-        String uri = new File("steering-wheel.svg").toURI().toString();
-        c.setURI(uri);
-        c.loadSVGDocument(uri);
-        c.addSVGDocumentLoaderListener(new SVGDocumentLoaderAdapter() {
-            public void documentLoadingCompleted(SVGDocumentLoaderEvent e) {
-                SVGDocument svgDoc = e.getSVGDocument();
-                Element elt = svgDoc.getElementById("layer1");
-                elt.setAttributeNS(null, "cursor", "pointer");
-                EventTarget t = (EventTarget) elt;
-                t.addEventListener("mousemove", new OnMoveAction(), false);
-            }
-        });
+
+        try {
+            String uri = getFileURI("steering-wheel.svg");
+            c.setURI(uri);
+            c.loadSVGDocument(uri);
+            c.addSVGDocumentLoaderListener(new SVGDocumentLoaderAdapter() {
+                public void documentLoadingCompleted(SVGDocumentLoaderEvent e) {
+                    SVGDocument svgDoc = e.getSVGDocument();
+                    Element elt = svgDoc.getElementById("layer1");
+                    elt.setAttributeNS(null, "cursor", "pointer");
+                    EventTarget t = (EventTarget) elt;
+                    t.addEventListener("mousemove", new OnMoveAction(), false);
+                }
+            });
+        }catch(Exception e){
+            System.err.println("Failed to load steering-wheel.svg. " + e.getMessage());
+        }
+
         setLayout(new BorderLayout());
         add(c, BorderLayout.CENTER);
 
+    }
+
+    private String getFileURI(String filename) throws Exception {
+
+        String cwd = Paths.get(".").toAbsolutePath().normalize().toString();
+        String absolutePath = cwd + File.separator + filename;
+        File f = new File(absolutePath);
+        if (f.exists()) {
+            System.out.println("found file in current working directory. " + absolutePath);
+            return absolutePath;
+        }
+
+        String dir = System.getProperty("user.dir");
+        absolutePath = dir + File.separator + filename;
+        f = new File(absolutePath);
+        if (f.exists()) {
+            System.out.println("found file in user home directory " + absolutePath);
+            return absolutePath;
+        }
+
+        f = new File(filename);
+        if (f.exists()) {
+            absolutePath = f.getAbsolutePath();
+            System.out.println("found file in " + absolutePath);
+            return absolutePath;
+        }
+
+        return getClass().getClassLoader().getResource(filename).getPath();
     }
 
     public class OnMoveAction implements EventListener {
