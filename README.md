@@ -13,5 +13,8 @@ This project is based on the vessel simulator from Tony Mattheys (https://source
 - open a shell, change to projet folder and run "mvn clean compile assembly:single"
 - change to target folder and run "java -jar nmea-generator-1.0-SNAPSHOT-jar-with-dependencies"
 
-# Requirements
+# Bugs
+- Wheel is not turning when mouse moves over (Linux, OpenJDK 1.8)
+
+# New Requirements
 Adding a virtual AIS receiver would be fun for testing OpenCPN AIS features.
