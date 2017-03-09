@@ -294,21 +294,41 @@ public class SettingsPanel extends AbstractPanel {
             }
         });
 
-        JPanel p2 = new JPanel();
-        p2.setLayout(new BorderLayout());
-        p2.setBorder(new TitledBorder("Server Monitor"));
-        monitorTextArea = new JTextArea();
-        JScrollPane scroll = new JScrollPane (monitorTextArea, 
-            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-        p2.add(scroll);
-
+ 
         JPanel p1 = new JPanel();
         p1.setLayout(new BorderLayout());
         p1.add(p3, BorderLayout.NORTH);
-        p1.add(p2, BorderLayout.CENTER);
+        p1.add(createMonitorPanel(), BorderLayout.CENTER);
 
         return p1;
+    }
+
+    private JPanel createMonitorPanel(){
+       JPanel p = new JPanel();
+        p.setLayout(new BorderLayout());
+        p.setBorder(new TitledBorder("Server Monitor"));
+        monitorTextArea = new JTextArea();
+        monitorTextArea.setEnabled(false);
+        JScrollPane scroll = new JScrollPane (monitorTextArea, 
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        p.add(scroll, BorderLayout.CENTER);
+        p.add(createMonitorButtonPanel(), BorderLayout.SOUTH);
+        return p;
+    }
+
+    private JPanel createMonitorButtonPanel(){
+        JPanel p = new JPanel();
+        p.setLayout(new BorderLayout());
+
+        JButton clearBtn = addButton(p, "Clear");
+        clearBtn.addActionListener(new ActionListener(){
+            public void actionPerformed (ActionEvent ae){
+                monitorTextArea.setText("");
+            }
+        });
+        p.add(clearBtn, BorderLayout.EAST);
+        return p;
     }
 
     private void startMonitoring(){
