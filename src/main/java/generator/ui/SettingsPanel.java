@@ -308,7 +308,6 @@ public class SettingsPanel extends AbstractPanel {
         p.setLayout(new BorderLayout());
         p.setBorder(new TitledBorder("Server Monitor"));
         monitorTextArea = new JTextArea();
-        monitorTextArea.setEnabled(false);
         JScrollPane scroll = new JScrollPane (monitorTextArea, 
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
