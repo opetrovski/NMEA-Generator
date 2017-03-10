@@ -61,10 +61,7 @@ public class SteeringWheelPanel extends AbstractPanel {
         path.toFile().deleteOnExit();
         InputStream in = getClass().getClassLoader().getResourceAsStream(filename);
         Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
-        String absolutePath = path.toUri().getPath();
-        if( absolutePath.startsWith("/C:") ){
-            absolutePath = absolutePath.substring(3);
-        }
+        String absolutePath = "file://" + path.toUri().getPath();
         return absolutePath;
     }
 
