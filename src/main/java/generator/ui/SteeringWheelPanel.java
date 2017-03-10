@@ -19,11 +19,10 @@ import org.w3c.dom.svg.SVGDocument;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 public class SteeringWheelPanel extends AbstractPanel {
 
@@ -58,31 +57,15 @@ public class SteeringWheelPanel extends AbstractPanel {
     }
 
     private String getFileURI(String filename) throws Exception {
-
-        String cwd = Paths.get(".").toAbsolutePath().normalize().toString();
-        String absolutePath = cwd + File.separator + filename;
-        File f = new File(absolutePath);
-        if (f.exists()) {
-            System.out.println("found file in current working directory. " + absolutePath);
-            return absolutePath;
+        Path path = Files.createTempFile("","");
+        path.toFile().deleteOnExit();
+        InputStream in = getClass().getClassLoader().getResourceAsStream(filename);
+        Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
+        String absolutePath = path.toUri().getPath();
+        if( absolutePath.startsWith("/C:") ){
+            absolutePath = absolutePath.substring(3);
         }
-
-        String dir = System.getProperty("user.dir");
-        absolutePath = dir + File.separator + filename;
-        f = new File(absolutePath);
-        if (f.exists()) {
-            System.out.println("found file in user home directory " + absolutePath);
-            return absolutePath;
-        }
-
-        f = new File(filename);
-        if (f.exists()) {
-            absolutePath = f.getAbsolutePath();
-            System.out.println("found file in " + absolutePath);
-            return absolutePath;
-        }
-
-        return getClass().getClassLoader().getResource(filename).getPath();
+        return absolutePath;
     }
 
     public class OnMoveAction implements EventListener {
